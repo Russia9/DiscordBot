@@ -78,18 +78,18 @@ const commands = {
                 msg.member.voiceChannel.leave();
             });
             msg.channel.sendMessage(`�граю: **${song.title}** включенную: **${song.requester}**`);
-            dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {audioonly: true}), {passes: tokens.passes});
+            dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {audioonly: true}), {passes: 1});
             let collector = msg.channel.createCollector(m => m);
             collector.on('message', m => {
-                if (m.content.startsWith(tokens.prefix + 'pause')) {
+                if (m.content.startsWith('&pause')) {
                     msg.channel.sendMessage('Поставленно на паузу').then(() => {
                         dispatcher.pause();
                     });
-                } else if (m.content.startsWith(tokens.prefix + 'resume')) {
+                } else if (m.content.startsWith('&resume')) {
                     msg.channel.sendMessage('Снято с паузы').then(() => {
                         dispatcher.resume();
                     });
-                } else if (m.content.startsWith(tokens.prefix + 'skip')) {
+                } else if (m.content.startsWith('&skip')) {
                     msg.channel.sendMessage('Пропущенно').then(() => {
                         dispatcher.end();
                     });
@@ -101,7 +101,7 @@ const commands = {
                     if (Math.round(dispatcher.volume * 50) <= 0) return msg.channel.sendMessage(`Громкость: ${Math.round(dispatcher.volume * 50)}%`);
                     dispatcher.setVolume(Math.max((dispatcher.volume * 50 - (2 * (m.content.split('-').length - 1))) / 50, 0));
                     msg.channel.sendMessage(`Громкость: ${Math.round(dispatcher.volume * 50)}%`);
-                } else if (m.content.startsWith(tokens.prefix + 'time')) {
+                } else if (m.content.startsWith('&time')) {
                     msg.channel.sendMessage(`Время: ${Math.floor(dispatcher.time / 60000)}:${Math.floor((dispatcher.time % 60000) / 1000) < 10 ? '0' + Math.floor((dispatcher.time % 60000) / 1000) : Math.floor((dispatcher.time % 60000) / 1000)}`);
                 }
             });
@@ -188,7 +188,7 @@ const commands = {
         searches[msg.guild.id] = [];
     },
     'helpmusic': (msg) => {
-        let tosend = ['```', tokens.prefix + 'join - Присоединиться к каналу отправителя', tokens.prefix + 'add - Добавить музыку из ссылки YouTube', tokens.prefix + 'search - Поиск + добавление в очередь из YouTube', tokens.prefix + 'queue - Показывает очередь до 15ой песни', tokens.prefix + 'play - �грает очередь', tokens.prefix + 'leave - Покинуть чат.', tokens.prefix + 'clear - Очистить очередь.', '', 'Команды управления музыкой-'.toUpperCase(), tokens.prefix + 'pause - Поставить на паузу', tokens.prefix + 'resume - Снять с паузы', tokens.prefix + 'skip - пропустить песню', tokens.prefix + 'time - Показывает время песни.', 'volume+(+++) - Повышает громкость на 2%/+', 'volume-(---) - Уменьшает громкость на 2%/-', '```'];
+        let tosend = ['```', '&join - Присоединиться к каналу отправителя', '&add - Добавить музыку из ссылки YouTube', '&search - Поиск + добавление в очередь из YouTube', '&queue - Показывает очередь до 15ой песни', '&play - Играет очередь', '&leave - Покинуть чат.', '&clear - Очистить очередь.', '', 'Команды управления музыкой-'.toUpperCase(), '&pause - Поставить на паузу', '&resume - Снять с паузы', '&skip - пропустить песню', '&time - Показывает время песни.', 'volume+(+++) - Повышает громкость на 2%/+', 'volume-(---) - Уменьшает громкость на 2%/-', '```'];
         msg.channel.sendMessage(tosend.join('\r\n '));
     }
 };
@@ -235,7 +235,7 @@ return;
 const args = message.content.slice(1).trim().split(/ +/g);
 const command = args.shift().toLowerCase();
 //discord music
-if (commands.hasOwnProperty(message.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0])) commands[message.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0]](message);
+if (commands.hasOwnProperty(message.content.toLowerCase().slice(1).split(' ')[0])) commands[message.content.toLowerCase().slice(1).split(' ')[0]](message);
 if (command === "testnewuser") {
     channel = message.member.guild.channels.find(ch => ch.name === "чатик");
     try {
@@ -273,4 +273,4 @@ if (command === "purge") {
     } else message.reply("У тебя не привилегий на удаление");
 }
 })
-client.login(config.token);
+client.login("Your token");
