@@ -2,6 +2,7 @@
 const request = require('request');
 const ru_syntax = require("./dict-ru/syn.json");
 const ru_answer = require("./dict-ru/answ.json");
+const config = require("./bot.json");
 const fuzzysort = require("fuzzysort");
 var prepared_syn = [];
 let isRude ={};
@@ -23,20 +24,19 @@ function ru_proceed(a, b, c) {
     }
     for (var ii = 0; ii < ru_syntax.length - 1; ii++) {
         try {
-            var foundarr = fuzzysort.go(a, prepared_syn[ii]).filter(function (item) {
-                return item.score < 4;
-            });
+            var foundarr = fuzzysort.go(a, prepared_syn[ii]);
             for (var i = 0; i < foundarr.length; i++) {
                 if (ru_syntax[ii][0] == "rude") {
                     isRude[c] = true;
                     module_answ = "angry";
                 }
                 var answtype = ru_answer[module_answ][ru_syntax[ii][0]];
-                answer += answtype[Math.floor(Math.random() * answtype.length)] + ru_answer[module_answ][hello2][Math.floor(Math.random() * 5)];
+                answer += answtype[Math.floor(Math.random() * answtype.length)] + ru_answer[module_answ]["hello2"][Math.floor(Math.random() * 5)];
             }
         } catch (e) {
             console.log(e);
-        }
+     
+   }
     }
     if (answer == "" && b) {
         answer = ru_answer[module_answ]["unknown"][Math.floor(Math.random() * ru_answer[module_answ]["unknown"].length)]
@@ -48,7 +48,7 @@ const Discord = require("discord.js");
 var search = require('youtube-search');
 var opts = {
     maxResults: 15,
-    key: 'youtube data api v3 token'
+    key: config["youtube_token"]
 };
 const client = new Discord.Client();
 const yt = require('ytdl-core');
@@ -64,6 +64,7 @@ const commands = {
         msg.reply("Очищено успешно");
     },
     'play': (msg) => {
+        searches[msg.guild.id] = [];
         if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Добавьте песню используя: &add`);
         if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg));
         if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Уже играет');
@@ -185,7 +186,6 @@ const commands = {
             queue[msg.guild.id].songs.push({url: idv, title: info.title, requester: msg.author.username});
             msg.channel.sendMessage(`Добавлена музыка **${info.title}** в очередь`);
         });
-        searches[msg.guild.id] = [];
     },
     'helpmusic': (msg) => {
         let tosend = ['```', '&join - Присоединиться к каналу отправителя', '&add - Добавить музыку из ссылки YouTube', '&search - Поиск + добавление в очередь из YouTube', '&queue - Показывает очередь до 15ой песни', '&play - Играет очередь', '&leave - Покинуть чат.', '&clear - Очистить очередь.', '', 'Команды управления музыкой-'.toUpperCase(), '&pause - Поставить на паузу', '&resume - Снять с паузы', '&skip - пропустить песню', '&time - Показывает время песни.', 'volume+(+++) - Повышает громкость на 2%/+', 'volume-(---) - Уменьшает громкость на 2%/-', '```'];
@@ -269,4 +269,4 @@ if (command === "purge") {
     } else message.reply("У тебя не привилегий на удаление");
 }
 })
-client.login("Your token");
+client.login(config["discord_token"]);
