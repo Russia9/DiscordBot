@@ -48,7 +48,7 @@ const Discord = require("discord.js");
 var search = require('youtube-search');
 var opts = {
     maxResults: 15,
-    key: 'AIzaSyDvqRvfMnpyw_ebX-iP511iyxKnjktdsSo'
+    key: 'youtube data api v3 token'
 };
 const client = new Discord.Client();
 const yt = require('ytdl-core');
@@ -217,9 +217,7 @@ client.on("message", async message => {
     if (message.author.bot) return;
     if (!mesarr.hasOwnProperty(message.channel.id)) mesarr[message.channel.id] = 0;
     mesarr[message.channel.id]++;
-    if (message.content.toLowerCase().indexOf("&") !==
-    0;
-)
+    if (message.content.toLowerCase().indexOf("&") !== 0)
     {
         if (mesarr[message.channel.id] >= 5 || message.channel.name == 'общалки-с-ботом') {
             mesarr[message.channel.id] = 0;
@@ -228,10 +226,8 @@ client.on("message", async message => {
                 message.reply(cccc);
             }
         }
-    );
-}
-return;
-}
+        return;
+    }
 const args = message.content.slice(1).trim().split(/ +/g);
 const command = args.shift().toLowerCase();
 //discord music
