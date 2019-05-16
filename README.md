@@ -9,3 +9,10 @@ Discord bot for discord servers:)
 
 
 ## Usage
+ - Create 'bot.json' file with this content: 
+ `{
+    "youtube_token":"",
+    "discord_token":""
+} 
+`
+ - Start index.js with command `node index.js`
